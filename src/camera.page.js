@@ -3,8 +3,10 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import * as Permissions from 'expo-permissions';
 import { Camera } from 'expo-camera';
-import Toolbar from './toolbar.component';
 
+//other components
+import Toolbar from './toolbar.component';
+import Gallery from './gallery.component';
 import styles from './styles';
 
 export default class CameraPage extends React.Component {
@@ -12,6 +14,7 @@ export default class CameraPage extends React.Component {
 
     state = {
         hasCameraPermission: null,
+        captures: [],
         // setting flash to be turned off by default
         flashMode: Camera.Constants.FlashMode.off,
         capturing: null,
@@ -50,11 +53,10 @@ export default class CameraPage extends React.Component {
     };
 
     render() {
-        const { hasCameraPermission, flashMode, cameraType, capturing } = this.state;
+        const { hasCameraPermission, flashMode, cameraType, capturing, captures } = this.state;
 
         if (hasCameraPermission === null) {
-            // return <View />;
-            return <Text>Null permissions</Text>;
+            return <View />;
         } else if (hasCameraPermission === false) {
             return <Text>Access to camera has been denied.</Text>;
         }
@@ -69,6 +71,7 @@ export default class CameraPage extends React.Component {
                         ref={camera => this.camera = camera}
                     />
                 </View>
+                {captures.length > 0 && <Gallery captures={captures}/>}
                 <Toolbar 
                      capturing={capturing}
                      flashMode={flashMode}
